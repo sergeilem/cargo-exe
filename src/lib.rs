@@ -1,7 +1,7 @@
 //! A very simple tool to print the executable output of `cargo build`.
 #![deny(missing_docs)]
 
-use std::{ffi::OsStr, path::{Path, PathBuf}, time::SystemTime};
+use std::{path::{Path, PathBuf}, time::SystemTime};
 use cargo_toml::{Error, Manifest};
 
 
@@ -17,17 +17,25 @@ pub const FILE_MANIFEST: &str = "Cargo.toml";
 
 fn find_recursive(
     path_dir: &Path,
-    filename: &OsStr,
+    path_sub: &Path,
     results: &mut Vec<PathBuf>,
+    recurse: usize,
 ) -> std::io::Result<()> {
     for sub in path_dir.read_dir()? {
         if let Ok(entry) = sub {
-            let path = entry.path();
+            let path: PathBuf = entry.path();
 
             if path.is_dir() {
-                find_recursive(&path, filename, results).ok();
-            } else if path.is_file() && entry.file_name() == filename {
-                results.push(path);
+                let mut path_file: PathBuf = path.clone();
+                path_file.push(path_sub);
+
+                if path_file.is_file() {
+                    results.push(path_file);
+                }
+
+                if 0 < recurse {
+                    find_recursive(&path, path_sub, results, recurse - 1)?;
+                }
             }
         }
     }
@@ -57,25 +65,34 @@ impl Mode {
     pub fn make_path(
         &self,
         path_dir_target: impl Into<PathBuf>,
-        filename_exe: impl AsRef<OsStr>,
+        path_exe: impl AsRef<Path>,
     ) -> Option<PathBuf> {
         let mut path: PathBuf = path_dir_target.into();
+        let path_exe: &Path = path_exe.as_ref();
 
         match self {
             Mode::Debug => {
                 path.push(DIR_DEBUG);
-                path.push(filename_exe.as_ref());
+                path.push(path_exe);
                 Some(path)
             }
             Mode::Release => {
                 path.push(DIR_RELEASE);
-                path.push(filename_exe.as_ref());
+                path.push(path_exe);
                 Some(path)
             }
             Mode::Latest => {
                 let mut paths = Vec::new();
 
-                find_recursive(&path, filename_exe.as_ref(), &mut paths).ok();
+                if let Err(e) = find_recursive(&path, path_exe, &mut paths, 2) {
+                    eprintln!(
+                        "WARNING: An error occurred while searching in `{}`. \
+                        Results may not be complete.\
+                        \n  Error: {}",
+                        path.display(),
+                        e
+                    );
+                }
 
                 paths.sort_by_key(|path| {
                     path.metadata()
