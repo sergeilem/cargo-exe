@@ -74,8 +74,8 @@ enum Cargo {
         #[clap(verbatim_doc_comment)]
         path: Option<String>,
 
-        /// Look for this filename rather than reading the manifest.
-        #[clap(short = 'f', name = "NAME")]
+        /// Look for this subpath rather than reading the manifest.
+        #[clap(short = 'f', name = "PATH")]
         names_override: Vec<String>,
     }
 }
