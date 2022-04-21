@@ -129,3 +129,30 @@ fn main() {
         }
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_target() {
+        fn check(input: Option<&str>, expect: &str) {
+            let output = find_target(input).display().to_string();
+
+            assert_eq!(
+                expect, output,
+                "Input {input:?} returns the wrong path.\
+                \n  Expected: {expect:?}\
+                \n  Received: {output:?}"
+            );
+        }
+
+        check(None, "./Cargo.toml");
+        check(Some("."), "./Cargo.toml");
+        check(Some("/"), "/Cargo.toml");
+        check(Some("./Cargo.toml"), "./Cargo.toml");
+        check(Some("/Cargo.toml"), "/Cargo.toml");
+        check(Some("Cargo.toml"), "Cargo.toml");
+    }
+}
