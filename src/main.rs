@@ -1,6 +1,6 @@
 use std::{ffi::OsStr, path::PathBuf, process::exit};
 use clap::Parser;
-use cargo_exe::*;
+use cargo_exe_v2::*;
 
 
 /// Help text for the subcommand.
