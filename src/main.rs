@@ -17,11 +17,11 @@ development — for example, to build and immediately run in a debugger.";
 /// The warning given when the program is run directly.
 const STANDALONE_WARN: &str = "{bin} {version}
 This program is intended to be invoked as a Cargo subcommand:
-        cargo exev2 [...]
+        cargo exe-v2 [...]
 
 For exhausting technical reasons, in order to run it alone, it needs to
 be run with the `exev2` subcommand:
-        cargo-exe-v2 \x1B[4mexev2\x1B[m [...]";
+        cargo-exe-v2 \x1B[4mexe-v2\x1B[m [...]";
 
 
 type Status = i32;

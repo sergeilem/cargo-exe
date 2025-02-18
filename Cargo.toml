@@ -1,7 +1,7 @@
 [package]
 name = "cargo-exe-v2"
 description = "A Cargo plugin to print the path to the output executable from `cargo build`."
-version = "2.0.1"
+version = "2.0.2"
 edition = "2021"
 
 authors = ["JS Dreim <jsdreim@protonmail.com>", "Sergei Lemeshkin <sergeilem@gmail.com>"]
