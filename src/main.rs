@@ -17,11 +17,11 @@ development — for example, to build and immediately run in a debugger.";
 /// The warning given when the program is run directly.
 const STANDALONE_WARN: &str = "{bin} {version}
 This program is intended to be invoked as a Cargo subcommand:
-        cargo exe [...]
+        cargo exev2 [...]
 
 For exhausting technical reasons, in order to run it alone, it needs to
-be run with the `exe` subcommand:
-        cargo-exe \x1B[4mexe\x1B[m [...]";
+be run with the `exev2` subcommand:
+        cargo-exe-v2 \x1B[4mexev2\x1B[m [...]";
 
 
 type Status = i32;
@@ -60,7 +60,7 @@ version,
 )]
 enum Cargo {
     #[clap(about = ABOUT, version)]
-    Exe {
+    ExeV2 {
         /// Find the most recently modified executable in `target/**`.
         #[clap(long, short)]
         latest: bool,
@@ -82,7 +82,7 @@ enum Cargo {
 
 
 fn main() {
-    let Cargo::Exe { latest, release, path, names_override } = Cargo::parse();
+    let Cargo::ExeV2 { latest, release, path, names_override } = Cargo::parse();
 
     let mode: Mode = if latest {
         Mode::Latest
